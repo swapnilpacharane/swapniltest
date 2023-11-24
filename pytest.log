@@ -1,0 +1,168 @@
+2023-09-26 12:43:43 INFO [services_context_manager] [7] Start the testcase- test_AAS_Success_Case
+2023-09-26 12:43:43 INFO [get_modified_payload] [159] Inside get_modified_payload
+2023-09-26 12:43:43 INFO [get_modified_payload] [172] Reurning from get_modified_payload
+2023-09-26 12:43:43 INFO [test_AAS_Success_Case] [26] Source ID is u1kfp9iijwop2xhbwao61tso4rj4kyd
+2023-09-26 12:43:43 INFO [watch_RabbitMQ_tester_publish] [71] Inside watch_RabbitMQ_tester_publish 
+2023-09-26 12:43:43 INFO [start] [179] Pika version 1.3.2 connecting to ('172.23.155.233', 5672)
+2023-09-26 12:43:43 INFO [_on_writable] [345] Socket connected: <socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55803), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_on_transport_establishment_done] [428] Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>).
+2023-09-26 12:43:43 INFO [_report_completion_and_cleanup] [293] AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [_report_completion_and_cleanup] [725] AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [_create_connection] [453] Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [__init__] [1264] Created channel=1
+2023-09-26 12:43:43 INFO [watch_RabbitMQ_tester_publish] [87] Connection to RabbitMQ Success
+2023-09-26 12:43:43 INFO [close] [802] Closing connection (200): Normal shutdown
+2023-09-26 12:43:43 INFO [close] [536] Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>>
+2023-09-26 12:43:43 INFO [_on_closeok] [1133] Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>>
+2023-09-26 12:43:43 INFO [close] [1316] Closing connection (200): 'Normal shutdown'
+2023-09-26 12:43:43 INFO [abort] [731] Aborting transport connection: state=1; <socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55803), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_initiate_abort] [904] _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55803), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_deactivate] [869] Deactivating transport: state=1; <socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55803), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_on_stream_terminated] [2017] AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2023-09-26 12:43:43 INFO [_on_stream_terminated] [2086] Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2023-09-26 12:43:43 INFO [_close_and_finalize] [882] Closing transport socket and unlinking: state=3; <socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55803), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_flush_output] [525] User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2023-09-26 12:43:43 INFO [watch_RabbitMQ_tester_publish] [100] Successfully published the message, Closing the connection.
+2023-09-26 12:43:43 INFO [watch_RabbitMQ_tester_consume] [103] Inside watch_RabbitMQ_tester_consume
+2023-09-26 12:43:43 INFO [start] [179] Pika version 1.3.2 connecting to ('172.23.155.233', 5672)
+2023-09-26 12:43:43 INFO [_on_writable] [345] Socket connected: <socket.socket fd=2556, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55806), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:43 INFO [_on_transport_establishment_done] [428] Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>).
+2023-09-26 12:43:43 INFO [_report_completion_and_cleanup] [293] AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [_report_completion_and_cleanup] [725] AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [_create_connection] [453] Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:43 INFO [__init__] [1264] Created channel=1
+2023-09-26 12:43:44 INFO [callback] [121]  [x] Received- b'{"responses":[{"source":"ITSM.DIMENSIONDATACYGNUS","error_details":"","source_id":"u1kfp9iijwop2xhbwao61tso4rj4kyd","destination":"GLOBAL","error_code":"","error_is_noncritical":false,"action_status":"Success","requested_on":"2023-05-11T12:14:06.000Z","name":"CHECKPOINT_LICENSE_DISCOVERY","action":"Activate","action_message":"Activation request is processed successfully.","error_is_overridable":false,"responded_on":"2023-09-26T07:13:45.003Z"}]}'
+2023-09-26 12:43:44 INFO [callback] [124] Source ID is u1kfp9iijwop2xhbwao61tso4rj4kyd
+2023-09-26 12:43:44 INFO [watch_RabbitMQ_tester_consume] [135] Returning from watch_RabbitMQ_tester_consume
+2023-09-26 12:43:44 INFO [test_AAS_Success_Case] [32] AAS response is Success
+2023-09-26 12:43:44 INFO [test_AAS_Success_Case] [34] Successfully received data in consume queue.
+2023-09-26 12:43:44 INFO [watch_mongoDB] [139] Inside watch_mongoDB 
+2023-09-26 12:43:44 INFO [watch_mongoDB] [144] ['sdi.activations', 'checkPointLicenses', 'checkPointProducts', 'licenseSummary']
+2023-09-26 12:43:44 INFO [watch_mongoDB] [146] Collection(Database(MongoClient(host=['172.23.155.233:27017'], document_class=dict, tz_aware=False, connect=True), 'DigitalWallet'), 'sdi.activations')
+2023-09-26 12:43:44 INFO [watch_mongoDB] [150] {'_id': ObjectId('651284a89df1b292db203ccb'), 'activation_type': 'CHECKPOINT_LICENSE_DISCOVERY', 'company_id': 'e87fb062dba43890ff929a0cd396192d', 'source': 'ITSM.DIMENSIONDATACYGNUS', 'source_id': 'u1kfp9iijwop2xhbwao61tso4rj4kyd', 'activation_action': 'Activate', 'ci_id': '72e4e72387ae6d98ccc741930cbb3581', 'company_esid': 'SPG-SD100000055935T', 'connection_details': [{'endUser': 'Adidas Singapore Pte Ltd', 'esid': 'DD-SYSID-7463c5c0877e65d8ccc741930cbb3508', 'type': 'Checkpoint connection object', 'used_for': 'Discovery'}], 'g_active': True, 'g_created_on': datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), 'g_last_action': 'Activate', 'g_last_actioned_on': datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), 'g_last_updated_on': datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), 'process_group_id': '1'}
+2023-09-26 12:43:44 INFO [services_context_manager] [13] End the testcase- test_AAS_Success_Case
+2023-09-26 12:43:44 INFO [services_context_manager] [7] Start the testcase- test_AAS_Failure_Case
+2023-09-26 12:43:44 INFO [get_modified_payload] [159] Inside get_modified_payload
+2023-09-26 12:43:44 INFO [get_modified_payload] [172] Reurning from get_modified_payload
+2023-09-26 12:43:44 INFO [test_AAS_Failure_Case] [47] Source ID is hnqpsxi9d535f260yr57xx1jb859seg
+2023-09-26 12:43:44 INFO [watch_RabbitMQ_tester_publish] [71] Inside watch_RabbitMQ_tester_publish 
+2023-09-26 12:43:44 INFO [start] [179] Pika version 1.3.2 connecting to ('172.23.155.233', 5672)
+2023-09-26 12:43:44 INFO [_on_writable] [345] Socket connected: <socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55814), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:44 INFO [_on_transport_establishment_done] [428] Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>).
+2023-09-26 12:43:44 INFO [_report_completion_and_cleanup] [293] AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:44 INFO [_report_completion_and_cleanup] [725] AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:44 INFO [_create_connection] [453] Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:44 INFO [__init__] [1264] Created channel=1
+2023-09-26 12:43:44 INFO [watch_RabbitMQ_tester_publish] [87] Connection to RabbitMQ Success
+2023-09-26 12:43:44 INFO [close] [802] Closing connection (200): Normal shutdown
+2023-09-26 12:43:44 INFO [close] [536] Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>>
+2023-09-26 12:43:44 INFO [_on_closeok] [1133] Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>>
+2023-09-26 12:43:44 INFO [close] [1316] Closing connection (200): 'Normal shutdown'
+2023-09-26 12:43:44 INFO [abort] [731] Aborting transport connection: state=1; <socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55814), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:44 INFO [_initiate_abort] [904] _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55814), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:45 INFO [_deactivate] [869] Deactivating transport: state=1; <socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55814), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:45 INFO [_on_stream_terminated] [2017] AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2023-09-26 12:43:45 INFO [_on_stream_terminated] [2086] Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2023-09-26 12:43:45 INFO [_close_and_finalize] [882] Closing transport socket and unlinking: state=3; <socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55814), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:45 INFO [_flush_output] [525] User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2023-09-26 12:43:45 INFO [watch_RabbitMQ_tester_publish] [100] Successfully published the message, Closing the connection.
+2023-09-26 12:43:45 INFO [watch_RabbitMQ_tester_consume] [103] Inside watch_RabbitMQ_tester_consume
+2023-09-26 12:43:45 INFO [start] [179] Pika version 1.3.2 connecting to ('172.23.155.233', 5672)
+2023-09-26 12:43:45 INFO [_on_writable] [345] Socket connected: <socket.socket fd=2588, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.23.144.1', 55817), raddr=('172.23.155.233', 5672)>
+2023-09-26 12:43:45 INFO [_on_transport_establishment_done] [428] Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>).
+2023-09-26 12:43:45 INFO [_report_completion_and_cleanup] [293] AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:45 INFO [_report_completion_and_cleanup] [725] AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:45 INFO [_create_connection] [453] Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850> params=<ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False>>
+2023-09-26 12:43:45 INFO [__init__] [1264] Created channel=1
+2023-09-26 12:43:45 INFO [callback] [121]  [x] Received- b'{"responses":[{"source_id":"hnqpsxi9d535f260yr57xx1jb859seg","action_message":"","error_details":"Unsupported action: \'activate\'","destination":"GLOBAL","source":"ITSM.DIMENSIONDATACYGNUS","error_is_overridable":false,"name":"CHECKPOINT_LICENSE_DISCOVERY","action_status":"Failure","requested_on":"2023-05-11T12:14:06.000Z","responded_on":"2023-09-26T07:13:45.803Z","action":"activate","error_is_noncritical":false,"error_code":"Invalid request"}]}'
+2023-09-26 12:43:45 INFO [callback] [124] Source ID is hnqpsxi9d535f260yr57xx1jb859seg
+2023-09-26 12:43:45 INFO [watch_RabbitMQ_tester_consume] [135] Returning from watch_RabbitMQ_tester_consume
+2023-09-26 12:43:45 INFO [test_AAS_Failure_Case] [53] AAS response is Failure
+2023-09-26 12:43:45 INFO [test_AAS_Failure_Case] [55] Successfully received data in consume queue.
+2023-09-26 12:43:45 INFO [services_context_manager] [13] End the testcase- test_AAS_Failure_Case
+2023-09-26 12:43:45 INFO [test_Discovery_Success_case] [59] Start for Success cases of POC_Discovery
+2023-09-26 12:43:45 INFO [connect_azure_storage_account] [16] <azure.storage.blob._blob_service_client.BlobServiceClient object at 0x0000029A144091E0>
+2023-09-26 12:43:45 INFO [on_request] [511] Request URL: 'https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks/Exported_Orders-38.xls'
+Request method: 'PUT'
+Request headers:
+    'Content-Length': '2245632'
+    'x-ms-blob-type': 'REDACTED'
+    'x-ms-version': 'REDACTED'
+    'Content-Type': 'application/octet-stream'
+    'Accept': 'application/xml'
+    'User-Agent': 'azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)'
+    'x-ms-date': 'REDACTED'
+    'x-ms-client-request-id': '3b3470ba-5c3c-11ee-87dc-982cbcb93b78'
+    'Authorization': 'REDACTED'
+A body is sent with the request
+2023-09-26 12:43:53 INFO [on_response] [550] Response status: 201
+Response headers:
+    'Content-Length': '0'
+    'Content-MD5': 'REDACTED'
+    'Last-Modified': 'Tue, 26 Sep 2023 07:13:53 GMT'
+    'ETag': '"0x8DBBE6023EC7167"'
+    'Server': 'Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0'
+    'x-ms-request-id': '82d1280d-901e-0022-7948-f0ed56000000'
+    'x-ms-client-request-id': '3b3470ba-5c3c-11ee-87dc-982cbcb93b78'
+    'x-ms-version': 'REDACTED'
+    'x-ms-content-crc64': 'REDACTED'
+    'x-ms-request-server-encrypted': 'REDACTED'
+    'Date': 'Tue, 26 Sep 2023 07:13:52 GMT'
+2023-09-26 12:43:53 INFO [on_request] [514] Request URL: 'https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks?restype=REDACTED&comp=REDACTED'
+Request method: 'GET'
+Request headers:
+    'x-ms-version': 'REDACTED'
+    'Accept': 'application/xml'
+    'User-Agent': 'azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)'
+    'x-ms-date': 'REDACTED'
+    'x-ms-client-request-id': '3fa47f85-5c3c-11ee-94c3-982cbcb93b78'
+    'Authorization': 'REDACTED'
+No body was attached to the request
+2023-09-26 12:43:53 INFO [on_response] [550] Response status: 200
+Response headers:
+    'Transfer-Encoding': 'chunked'
+    'Content-Type': 'application/xml'
+    'Server': 'Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0'
+    'x-ms-request-id': '82d1450b-901e-0022-5c49-f0ed56000000'
+    'x-ms-client-request-id': '3fa47f85-5c3c-11ee-94c3-982cbcb93b78'
+    'x-ms-version': 'REDACTED'
+    'Date': 'Tue, 26 Sep 2023 07:13:52 GMT'
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Check_Point_Product_List_USD_March_2023.xlsx
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported Orders - Partner Number 141095.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported Orders - Partner Number 142629.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported Orders - Partner Number 142859.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported_Orders-38.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported_Orders-47.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported_Orders_6.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported_Orders_7.xls
+2023-09-26 12:43:53 INFO [get_list_of_blob] [23] Name: Exported_Orders_8.xls
+2023-09-26 12:43:57 INFO [test_Discovery_Success_case] [72] SO# for the enduser - 16311248
+2023-09-26 12:43:57 INFO [test_Discovery_Success_case] [78] From Standalone sheet- [[16311248, 'CPSB-NGTP-5600-2Y', 'CPSB-NGTP-5600-2Y', 1, '01-Sep-2021', nan, nan, nan, nan], [16311248, 'CPSB-NGTP-5600-2Y-HA', 'CPSB-NGTP-5600-2Y-HA', 1, '01-Sep-2021', nan, nan, nan, nan]]
+2023-09-26 12:43:57 INFO [test_Discovery_Success_case] [80] The SKU id is -CPSB-NGTP-5600-2Y-HA
+2023-09-26 12:43:59 INFO [test_Discovery_Success_case] [86] Product complete data from Product List sheet- [['Renewals & Blades', 'CPSB-NGTP-5600-2Y-HA', 'SW subscription', 'SW subscription', 129103, 'Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA', nan, 'USD', 19680, 19680.0, 0.0, '5A002.a.1', 'ENC / 740.17(b)(2)', 'G142048', '8517.62.0050', nan, nan, nan]]
+2023-09-26 12:44:24 INFO [watch_mongoDB_Discovery] [53] Inside dev instance of watch_mongoDB 
+2023-09-26 12:44:24 INFO [watch_mongoDB_Discovery] [58] ['sdi.activations', 'checkPointLicenses', 'checkPointProducts', 'licenseSummary']
+2023-09-26 12:44:24 INFO [watch_mongoDB_Discovery] [64] {'_id': ObjectId('651284bb9df1b292db203d15'), 'skuId': 'CPSB-NGTP-5600-2Y-HA', 'licenseName': 'Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA', 'quantity': 1, 'category': 'Renewals & Blades', 'renewalDate': datetime.datetime(2021, 9, 1, 0, 0), 'startDate': datetime.datetime(2019, 9, 1, 12, 21, 36), 'licenseType': 'Subscription licenses', 'companyId': 'e87fb062dba43890ff929a0cd396192d', 'gUploadId': 1, 'gUploadedOn': datetime.datetime(2023, 9, 26, 7, 14, 3, 79000)}
+2023-09-26 12:44:24 INFO [test_Discovery_Success_case] [89] Data from MongoDB-{'_id': ObjectId('651284bb9df1b292db203d15'), 'skuId': 'CPSB-NGTP-5600-2Y-HA', 'licenseName': 'Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA', 'quantity': 1, 'category': 'Renewals & Blades', 'renewalDate': datetime.datetime(2021, 9, 1, 0, 0), 'startDate': datetime.datetime(2019, 9, 1, 12, 21, 36), 'licenseType': 'Subscription licenses', 'companyId': 'e87fb062dba43890ff929a0cd396192d', 'gUploadId': 1, 'gUploadedOn': datetime.datetime(2023, 9, 26, 7, 14, 3, 79000)}
+2023-09-26 12:44:24 INFO [test_Discovery_Success_case] [95] gUploadId is : 1
+2023-09-26 12:44:24 INFO [test_Discovery_Success_case] [96] gUploadedOn date is : 2023-09-26 07:14:03.079000
+2023-09-26 12:44:24 INFO [on_request] [514] Request URL: 'https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks/Exported_Orders-38.xls'
+Request method: 'DELETE'
+Request headers:
+    'x-ms-version': 'REDACTED'
+    'Accept': 'application/xml'
+    'User-Agent': 'azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)'
+    'x-ms-date': 'REDACTED'
+    'x-ms-client-request-id': '52574ff4-5c3c-11ee-8948-982cbcb93b78'
+    'Authorization': 'REDACTED'
+No body was attached to the request
+2023-09-26 12:44:24 INFO [on_response] [550] Response status: 202
+Response headers:
+    'Content-Length': '0'
+    'Server': 'Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0'
+    'x-ms-request-id': '82d1ca0c-901e-0022-3d49-f0ed56000000'
+    'x-ms-client-request-id': '52574ff4-5c3c-11ee-8948-982cbcb93b78'
+    'x-ms-version': 'REDACTED'
+    'x-ms-delete-type-permanent': 'REDACTED'
+    'Date': 'Tue, 26 Sep 2023 07:14:23 GMT'
+2023-09-26 12:44:24 INFO [test_Discovery_Success_case] [98] End of Success cases of POC_Discovery

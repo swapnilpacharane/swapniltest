@@ -1,0 +1,80 @@
+{"requests": [
+    {
+      "action": "Activate",
+      "configuration_item": {
+        "account_id": "undefined",
+        "backend_properties": [],
+        "class": "cmdb_ci",
+        "class_name": "Configuration item",
+        "client_name": "",
+        "company": "TIS TEST Client JUN 6",
+        "company_esid": "SPG-SD100000055935T",
+        "company_id": "e87fb062dba43890ff929a0cd396192d",
+        "connections": [
+          {
+            "end_user": "Adidas Singapore Pte Ltd",
+            "esid": "DD-SYSID-7463c5c0877e65d8ccc741930cbb3508",
+            "type": "Checkpoint connection object",
+            "used_for": "Discovery"
+          }
+        ],
+        "covering_contracts": [
+          "SDI Level 1 24x7"
+        ],
+        "covering_services": [
+          "Software Support Services"
+        ],
+        "esid": "SPN-EQCHECKPOINTTESTCLIENTJUN6",
+        "id": "72e4e72387ae6d98ccc741930cbb3581",
+        "ip_address": "",
+        "location_address_1": "",
+        "location_address_2": "",
+        "location_address_3": "",
+        "location_city": "",
+        "location_country": "",
+        "location_esid": "",
+        "location_global_region": "",
+        "location_name": "",
+        "location_site_id": "",
+        "location_state": "",
+        "mac_address": "",
+        "manufacturer": "Dimension Data Global",
+        "model_description": "SDI Checkpoint License Upload Virtual CI",
+        "model_id": "SDI-SERVICES-CHECKPOINT-VIRTUAL-CI",
+        "name": "CHECKPOINTTESTCLIENTJUN6",
+        "org_unit_esid": "",
+        "org_unit_name": "",
+        "part_number": "SDI-SERVICES-CHECKPOINT-VIRTUAL-CI",
+        "platform_ids": [
+          "72e4e72387ae6d98ccc741930cbb3581",
+          "SPN-EQCHECKPOINTTESTCLIENTJUN6",
+          "LDS-6458b232fcbe5e489c0af1a4"
+        ],
+        "portal_classification": "",
+        "related_cis": [],
+        "secondary_ip_address": "",
+        "serial_number": "",
+        "software_installed": "",
+        "software_version": "",
+        "system_name": "CHECKPOINTTESTCLIENTJUN6"
+      },
+      "connections": [
+        {
+          "name": "CHECKPOINT_LICENSE_DISCOVERY"
+        }
+      ],
+      "destination": "GLOBAL",
+      "distribution_method": "individual",
+      "name": "CHECKPOINT_LICENSE_DISCOVERY",
+      "overridable_errors": [],
+      "policies": [],
+      "protocol_version": 2,
+      "requested_on": "2023-05-11T12:14:06.000Z",
+      "source": "ITSM.DIMENSIONDATACYGNUS",
+      "source_id": "78e3c1c4877e65d8ccc741930cbb357d",
+      "timeout": 300,
+      "g_expire_distribution_on": "2023-05-11T13:14:08.795Z"
+    }
+  ],
+  "emr_published_on": 1683807249005
+}

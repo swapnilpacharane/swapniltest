@@ -1,0 +1,54 @@
+parameters:
+- name: AAS
+  type: boolean
+  default: true
+- name: Discovery
+  type: boolean
+  default: false
+- name: Both
+  type: boolean
+  default: false
+
+trigger:
+- main  
+
+pool:
+  name: 'QA_Backend_Automation'
+  vmImage: 'azp-agent:linux'
+
+steps:
+- script: |
+    python3 -m pip install --user --upgrade pip setuptools
+    pip install --user -r requirements.txt
+  displayName: 'Install dependencies'
+
+- ${{ if eq(parameters.AAS, true) }}:
+  - script: |
+      python3 -m pytest --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html -k AAS
+    displayName: 'Run pytest'
+- ${{ if eq(parameters.Discovery, true) }}:
+  - script: |
+      python3 -m pytest test_main.py --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html -k Discovery
+    displayName: 'Run pytest'
+- ${{ if eq(parameters.Both, true) }}:
+  - script: |
+      python3 -m pytest test_main.py --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    displayName: 'Run pytest'
+    
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: sdk
+    version: '6.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'tests/test-*.xml'
+  condition: succeededOrFailed()
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/htmlcov'
+  condition: succeededOrFailed()

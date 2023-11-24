@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>report.html</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    let visibleString = getQueryParameter('visible') || 'all';
+    visibleString = visibleString.toLowerCase();
+    const checkedItems = visibleString.split(',');
+
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++) {
+        filterItems[i].hidden = false;
+
+        if (visibleString != 'all') {
+            filterItems[i].checked = checkedItems.includes(filterItems[i].getAttribute('data-test-result'));
+            filterTable(filterItems[i]);
+        }
+    }
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>report.html</h1>
+    <p>Report generated on 26-Sep-2023 at 12:44:24 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <h2>Summary</h2>
+    <p>3 tests ran in 55.73 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">3 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_main.py::test_AAS_Success_Case</td>
+          <td class="col-duration">2.81</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> -------------------------------Captured log call-------------------------------- <br/>INFO     root:conftest.py:7 Start the testcase- test_AAS_Success_Case
+INFO     root:utils.py:159 Inside get_modified_payload
+INFO     root:utils.py:172 Reurning from get_modified_payload
+INFO     root:test_main.py:26 Source ID is u1kfp9iijwop2xhbwao61tso4rj4kyd
+INFO     root:utils.py:71 Inside watch_RabbitMQ_tester_publish 
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:179 Pika version 1.3.2 connecting to (&#x27;172.23.155.233&#x27;, 5672)
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:345 Socket connected: &lt;socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55803), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:428 Streaming transport linked up: (&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt;, _StreamingProtocolShim: &lt;SelectConnection PROTOCOL transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;).
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:293 AMQPConnector - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:725 AMQPConnectionWorkflow - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:453 Connection workflow succeeded: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:1264 Created channel=1
+INFO     root:utils.py:87 Connection to RabbitMQ Success
+INFO     pika.adapters.blocking_connection:blocking_connection.py:802 Closing connection (200): Normal shutdown
+INFO     pika.channel:channel.py:536 Closing channel (200): &#x27;Normal shutdown&#x27; on &lt;Channel number=1 OPEN conn=&lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;&gt;
+INFO     pika.channel:channel.py:1133 Received &lt;Channel.CloseOk&gt; on &lt;Channel number=1 CLOSING conn=&lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14408760&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;&gt;
+INFO     pika.connection:connection.py:1316 Closing connection (200): &#x27;Normal shutdown&#x27;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:731 Aborting transport connection: state=1; &lt;socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55803), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:904 _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; &lt;socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55803), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:869 Deactivating transport: state=1; &lt;socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55803), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.connection:connection.py:2017 AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;
+INFO     pika.connection:connection.py:2086 Stack terminated due to ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:882 Closing transport socket and unlinking: state=3; &lt;socket.socket fd=2408, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55803), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:525 User-initiated close: result=BlockingConnection__OnClosedArgs(connection=&lt;SelectConnection CLOSED transport=None params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;, error=ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;)
+INFO     root:utils.py:100 Successfully published the message, Closing the connection.
+INFO     root:utils.py:103 Inside watch_RabbitMQ_tester_consume
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:179 Pika version 1.3.2 connecting to (&#x27;172.23.155.233&#x27;, 5672)
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:345 Socket connected: &lt;socket.socket fd=2556, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55806), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:428 Streaming transport linked up: (&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0&gt;, _StreamingProtocolShim: &lt;SelectConnection PROTOCOL transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;).
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:293 AMQPConnector - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:725 AMQPConnectionWorkflow - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:453 Connection workflow succeeded: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A14409FF0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:1264 Created channel=1
+INFO     root:utils.py:121  [x] Received- b&#x27;{&quot;responses&quot;:[{&quot;source&quot;:&quot;ITSM.DIMENSIONDATACYGNUS&quot;,&quot;error_details&quot;:&quot;&quot;,&quot;source_id&quot;:&quot;u1kfp9iijwop2xhbwao61tso4rj4kyd&quot;,&quot;destination&quot;:&quot;GLOBAL&quot;,&quot;error_code&quot;:&quot;&quot;,&quot;error_is_noncritical&quot;:false,&quot;action_status&quot;:&quot;Success&quot;,&quot;requested_on&quot;:&quot;2023-05-11T12:14:06.000Z&quot;,&quot;name&quot;:&quot;CHECKPOINT_LICENSE_DISCOVERY&quot;,&quot;action&quot;:&quot;Activate&quot;,&quot;action_message&quot;:&quot;Activation request is processed successfully.&quot;,&quot;error_is_overridable&quot;:false,&quot;responded_on&quot;:&quot;2023-09-26T07:13:45.003Z&quot;}]}&#x27;
+INFO     root:utils.py:124 Source ID is u1kfp9iijwop2xhbwao61tso4rj4kyd
+INFO     root:utils.py:135 Returning from watch_RabbitMQ_tester_consume
+INFO     root:test_main.py:32 AAS response is Success
+INFO     root:test_main.py:34 Successfully received data in consume queue.
+INFO     root:utils.py:139 Inside watch_mongoDB 
+INFO     root:utils.py:144 [&#x27;sdi.activations&#x27;, &#x27;checkPointLicenses&#x27;, &#x27;checkPointProducts&#x27;, &#x27;licenseSummary&#x27;]
+INFO     root:utils.py:146 Collection(Database(MongoClient(host=[&#x27;172.23.155.233:27017&#x27;], document_class=dict, tz_aware=False, connect=True), &#x27;DigitalWallet&#x27;), &#x27;sdi.activations&#x27;)
+INFO     root:utils.py:150 {&#x27;_id&#x27;: ObjectId(&#x27;651284a89df1b292db203ccb&#x27;), &#x27;activation_type&#x27;: &#x27;CHECKPOINT_LICENSE_DISCOVERY&#x27;, &#x27;company_id&#x27;: &#x27;e87fb062dba43890ff929a0cd396192d&#x27;, &#x27;source&#x27;: &#x27;ITSM.DIMENSIONDATACYGNUS&#x27;, &#x27;source_id&#x27;: &#x27;u1kfp9iijwop2xhbwao61tso4rj4kyd&#x27;, &#x27;activation_action&#x27;: &#x27;Activate&#x27;, &#x27;ci_id&#x27;: &#x27;72e4e72387ae6d98ccc741930cbb3581&#x27;, &#x27;company_esid&#x27;: &#x27;SPG-SD100000055935T&#x27;, &#x27;connection_details&#x27;: [{&#x27;endUser&#x27;: &#x27;Adidas Singapore Pte Ltd&#x27;, &#x27;esid&#x27;: &#x27;DD-SYSID-7463c5c0877e65d8ccc741930cbb3508&#x27;, &#x27;type&#x27;: &#x27;Checkpoint connection object&#x27;, &#x27;used_for&#x27;: &#x27;Discovery&#x27;}], &#x27;g_active&#x27;: True, &#x27;g_created_on&#x27;: datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), &#x27;g_last_action&#x27;: &#x27;Activate&#x27;, &#x27;g_last_actioned_on&#x27;: datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), &#x27;g_last_updated_on&#x27;: datetime.datetime(2023, 9, 26, 7, 13, 44, 872000), &#x27;process_group_id&#x27;: &#x27;1&#x27;}
+INFO     root:conftest.py:13 End the testcase- test_AAS_Success_Case<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_main.py::test_AAS_Failure_Case</td>
+          <td class="col-duration">0.64</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> -------------------------------Captured log call-------------------------------- <br/>INFO     root:conftest.py:7 Start the testcase- test_AAS_Failure_Case
+INFO     root:utils.py:159 Inside get_modified_payload
+INFO     root:utils.py:172 Reurning from get_modified_payload
+INFO     root:test_main.py:47 Source ID is hnqpsxi9d535f260yr57xx1jb859seg
+INFO     root:utils.py:71 Inside watch_RabbitMQ_tester_publish 
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:179 Pika version 1.3.2 connecting to (&#x27;172.23.155.233&#x27;, 5672)
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:345 Socket connected: &lt;socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55814), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:428 Streaming transport linked up: (&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt;, _StreamingProtocolShim: &lt;SelectConnection PROTOCOL transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;).
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:293 AMQPConnector - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:725 AMQPConnectionWorkflow - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:453 Connection workflow succeeded: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:1264 Created channel=1
+INFO     root:utils.py:87 Connection to RabbitMQ Success
+INFO     pika.adapters.blocking_connection:blocking_connection.py:802 Closing connection (200): Normal shutdown
+INFO     pika.channel:channel.py:536 Closing channel (200): &#x27;Normal shutdown&#x27; on &lt;Channel number=1 OPEN conn=&lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;&gt;
+INFO     pika.channel:channel.py:1133 Received &lt;Channel.CloseOk&gt; on &lt;Channel number=1 CLOSING conn=&lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1440BFD0&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;&gt;
+INFO     pika.connection:connection.py:1316 Closing connection (200): &#x27;Normal shutdown&#x27;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:731 Aborting transport connection: state=1; &lt;socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55814), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:904 _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; &lt;socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55814), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:869 Deactivating transport: state=1; &lt;socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55814), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.connection:connection.py:2017 AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;
+INFO     pika.connection:connection.py:2086 Stack terminated due to ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:882 Closing transport socket and unlinking: state=3; &lt;socket.socket fd=2396, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55814), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:525 User-initiated close: result=BlockingConnection__OnClosedArgs(connection=&lt;SelectConnection CLOSED transport=None params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;, error=ConnectionClosedByClient: (200) &#x27;Normal shutdown&#x27;)
+INFO     root:utils.py:100 Successfully published the message, Closing the connection.
+INFO     root:utils.py:103 Inside watch_RabbitMQ_tester_consume
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:179 Pika version 1.3.2 connecting to (&#x27;172.23.155.233&#x27;, 5672)
+INFO     pika.adapters.utils.io_services_utils:io_services_utils.py:345 Socket connected: &lt;socket.socket fd=2588, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=(&#x27;172.23.144.1&#x27;, 55817), raddr=(&#x27;172.23.155.233&#x27;, 5672)&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:428 Streaming transport linked up: (&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850&gt;, _StreamingProtocolShim: &lt;SelectConnection PROTOCOL transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;).
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:293 AMQPConnector - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.utils.connection_workflow:connection_workflow.py:725 AMQPConnectionWorkflow - reporting success: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:453 Connection workflow succeeded: &lt;SelectConnection OPEN transport=&lt;pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000029A1444C850&gt; params=&lt;ConnectionParameters host=172.23.155.233 port=5672 virtual_host=MSP ssl=False&gt;&gt;
+INFO     pika.adapters.blocking_connection:blocking_connection.py:1264 Created channel=1
+INFO     root:utils.py:121  [x] Received- b&#x27;{&quot;responses&quot;:[{&quot;source_id&quot;:&quot;hnqpsxi9d535f260yr57xx1jb859seg&quot;,&quot;action_message&quot;:&quot;&quot;,&quot;error_details&quot;:&quot;Unsupported action: \&#x27;activate\&#x27;&quot;,&quot;destination&quot;:&quot;GLOBAL&quot;,&quot;source&quot;:&quot;ITSM.DIMENSIONDATACYGNUS&quot;,&quot;error_is_overridable&quot;:false,&quot;name&quot;:&quot;CHECKPOINT_LICENSE_DISCOVERY&quot;,&quot;action_status&quot;:&quot;Failure&quot;,&quot;requested_on&quot;:&quot;2023-05-11T12:14:06.000Z&quot;,&quot;responded_on&quot;:&quot;2023-09-26T07:13:45.803Z&quot;,&quot;action&quot;:&quot;activate&quot;,&quot;error_is_noncritical&quot;:false,&quot;error_code&quot;:&quot;Invalid request&quot;}]}&#x27;
+INFO     root:utils.py:124 Source ID is hnqpsxi9d535f260yr57xx1jb859seg
+INFO     root:utils.py:135 Returning from watch_RabbitMQ_tester_consume
+INFO     root:test_main.py:53 AAS response is Failure
+INFO     root:test_main.py:55 Successfully received data in consume queue.
+INFO     root:conftest.py:13 End the testcase- test_AAS_Failure_Case<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_main.py::test_Discovery_Success_case</td>
+          <td class="col-duration">39.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> -------------------------------Captured log call-------------------------------- <br/>INFO     root:test_main.py:59 Start for Success cases of POC_Discovery
+INFO     root:utils.py:16 &lt;azure.storage.blob._blob_service_client.BlobServiceClient object at 0x0000029A144091E0&gt;
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:511 Request URL: &#x27;https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks/Exported_Orders-38.xls&#x27;
+Request method: &#x27;PUT&#x27;
+Request headers:
+    &#x27;Content-Length&#x27;: &#x27;2245632&#x27;
+    &#x27;x-ms-blob-type&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Content-Type&#x27;: &#x27;application/octet-stream&#x27;
+    &#x27;Accept&#x27;: &#x27;application/xml&#x27;
+    &#x27;User-Agent&#x27;: &#x27;azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)&#x27;
+    &#x27;x-ms-date&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;3b3470ba-5c3c-11ee-87dc-982cbcb93b78&#x27;
+    &#x27;Authorization&#x27;: &#x27;REDACTED&#x27;
+A body is sent with the request
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:550 Response status: 201
+Response headers:
+    &#x27;Content-Length&#x27;: &#x27;0&#x27;
+    &#x27;Content-MD5&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Last-Modified&#x27;: &#x27;Tue, 26 Sep 2023 07:13:53 GMT&#x27;
+    &#x27;ETag&#x27;: &#x27;&quot;0x8DBBE6023EC7167&quot;&#x27;
+    &#x27;Server&#x27;: &#x27;Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0&#x27;
+    &#x27;x-ms-request-id&#x27;: &#x27;82d1280d-901e-0022-7948-f0ed56000000&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;3b3470ba-5c3c-11ee-87dc-982cbcb93b78&#x27;
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-content-crc64&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-request-server-encrypted&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Date&#x27;: &#x27;Tue, 26 Sep 2023 07:13:52 GMT&#x27;
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:514 Request URL: &#x27;https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks?restype=REDACTED&amp;comp=REDACTED&#x27;
+Request method: &#x27;GET&#x27;
+Request headers:
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Accept&#x27;: &#x27;application/xml&#x27;
+    &#x27;User-Agent&#x27;: &#x27;azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)&#x27;
+    &#x27;x-ms-date&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;3fa47f85-5c3c-11ee-94c3-982cbcb93b78&#x27;
+    &#x27;Authorization&#x27;: &#x27;REDACTED&#x27;
+No body was attached to the request
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:550 Response status: 200
+Response headers:
+    &#x27;Transfer-Encoding&#x27;: &#x27;chunked&#x27;
+    &#x27;Content-Type&#x27;: &#x27;application/xml&#x27;
+    &#x27;Server&#x27;: &#x27;Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0&#x27;
+    &#x27;x-ms-request-id&#x27;: &#x27;82d1450b-901e-0022-5c49-f0ed56000000&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;3fa47f85-5c3c-11ee-94c3-982cbcb93b78&#x27;
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Date&#x27;: &#x27;Tue, 26 Sep 2023 07:13:52 GMT&#x27;
+INFO     root:utils.py:23 Name: Check_Point_Product_List_USD_March_2023.xlsx
+INFO     root:utils.py:23 Name: Exported Orders - Partner Number 141095.xls
+INFO     root:utils.py:23 Name: Exported Orders - Partner Number 142629.xls
+INFO     root:utils.py:23 Name: Exported Orders - Partner Number 142859.xls
+INFO     root:utils.py:23 Name: Exported_Orders-38.xls
+INFO     root:utils.py:23 Name: Exported_Orders-47.xls
+INFO     root:utils.py:23 Name: Exported_Orders_6.xls
+INFO     root:utils.py:23 Name: Exported_Orders_7.xls
+INFO     root:utils.py:23 Name: Exported_Orders_8.xls
+INFO     root:test_main.py:72 SO# for the enduser - 16311248
+INFO     root:test_main.py:78 From Standalone sheet- [[16311248, &#x27;CPSB-NGTP-5600-2Y&#x27;, &#x27;CPSB-NGTP-5600-2Y&#x27;, 1, &#x27;01-Sep-2021&#x27;, nan, nan, nan, nan], [16311248, &#x27;CPSB-NGTP-5600-2Y-HA&#x27;, &#x27;CPSB-NGTP-5600-2Y-HA&#x27;, 1, &#x27;01-Sep-2021&#x27;, nan, nan, nan, nan]]
+INFO     root:test_main.py:80 The SKU id is -CPSB-NGTP-5600-2Y-HA
+INFO     root:test_main.py:86 Product complete data from Product List sheet- [[&#x27;Renewals &amp; Blades&#x27;, &#x27;CPSB-NGTP-5600-2Y-HA&#x27;, &#x27;SW subscription&#x27;, &#x27;SW subscription&#x27;, 129103, &#x27;Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA&#x27;, nan, &#x27;USD&#x27;, 19680, 19680.0, 0.0, &#x27;5A002.a.1&#x27;, &#x27;ENC / 740.17(b)(2)&#x27;, &#x27;G142048&#x27;, &#x27;8517.62.0050&#x27;, nan, nan, nan]]
+INFO     root:utils.py:53 Inside dev instance of watch_mongoDB 
+INFO     root:utils.py:58 [&#x27;sdi.activations&#x27;, &#x27;checkPointLicenses&#x27;, &#x27;checkPointProducts&#x27;, &#x27;licenseSummary&#x27;]
+INFO     root:utils.py:64 {&#x27;_id&#x27;: ObjectId(&#x27;651284bb9df1b292db203d15&#x27;), &#x27;skuId&#x27;: &#x27;CPSB-NGTP-5600-2Y-HA&#x27;, &#x27;licenseName&#x27;: &#x27;Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA&#x27;, &#x27;quantity&#x27;: 1, &#x27;category&#x27;: &#x27;Renewals &amp; Blades&#x27;, &#x27;renewalDate&#x27;: datetime.datetime(2021, 9, 1, 0, 0), &#x27;startDate&#x27;: datetime.datetime(2019, 9, 1, 12, 21, 36), &#x27;licenseType&#x27;: &#x27;Subscription licenses&#x27;, &#x27;companyId&#x27;: &#x27;e87fb062dba43890ff929a0cd396192d&#x27;, &#x27;gUploadId&#x27;: 1, &#x27;gUploadedOn&#x27;: datetime.datetime(2023, 9, 26, 7, 14, 3, 79000)}
+INFO     root:test_main.py:89 Data from MongoDB-{&#x27;_id&#x27;: ObjectId(&#x27;651284bb9df1b292db203d15&#x27;), &#x27;skuId&#x27;: &#x27;CPSB-NGTP-5600-2Y-HA&#x27;, &#x27;licenseName&#x27;: &#x27;Next Generation Threat Prevention Package subscription for 2 year for 5600 Appliance HA&#x27;, &#x27;quantity&#x27;: 1, &#x27;category&#x27;: &#x27;Renewals &amp; Blades&#x27;, &#x27;renewalDate&#x27;: datetime.datetime(2021, 9, 1, 0, 0), &#x27;startDate&#x27;: datetime.datetime(2019, 9, 1, 12, 21, 36), &#x27;licenseType&#x27;: &#x27;Subscription licenses&#x27;, &#x27;companyId&#x27;: &#x27;e87fb062dba43890ff929a0cd396192d&#x27;, &#x27;gUploadId&#x27;: 1, &#x27;gUploadedOn&#x27;: datetime.datetime(2023, 9, 26, 7, 14, 3, 79000)}
+INFO     root:test_main.py:95 gUploadId is : 1
+INFO     root:test_main.py:96 gUploadedOn date is : 2023-09-26 07:14:03.079000
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:514 Request URL: &#x27;https://sdidwcheckpointuat.blob.core.windows.net/checkpoint-workbooks/Exported_Orders-38.xls&#x27;
+Request method: &#x27;DELETE&#x27;
+Request headers:
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Accept&#x27;: &#x27;application/xml&#x27;
+    &#x27;User-Agent&#x27;: &#x27;azsdk-python-storage-blob/12.17.0 Python/3.10.11 (Windows-10-10.0.22621-SP0)&#x27;
+    &#x27;x-ms-date&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;52574ff4-5c3c-11ee-8948-982cbcb93b78&#x27;
+    &#x27;Authorization&#x27;: &#x27;REDACTED&#x27;
+No body was attached to the request
+INFO     azure.core.pipeline.policies.http_logging_policy:_universal.py:550 Response status: 202
+Response headers:
+    &#x27;Content-Length&#x27;: &#x27;0&#x27;
+    &#x27;Server&#x27;: &#x27;Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0&#x27;
+    &#x27;x-ms-request-id&#x27;: &#x27;82d1ca0c-901e-0022-3d49-f0ed56000000&#x27;
+    &#x27;x-ms-client-request-id&#x27;: &#x27;52574ff4-5c3c-11ee-8948-982cbcb93b78&#x27;
+    &#x27;x-ms-version&#x27;: &#x27;REDACTED&#x27;
+    &#x27;x-ms-delete-type-permanent&#x27;: &#x27;REDACTED&#x27;
+    &#x27;Date&#x27;: &#x27;Tue, 26 Sep 2023 07:14:23 GMT&#x27;
+INFO     root:test_main.py:98 End of Success cases of POC_Discovery<br/></div></td></tr></tbody></table></body></html>
