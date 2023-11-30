@@ -1,7 +1,7 @@
 import os
 end_user= 'Adidas Singapore Pte Ltd'
 # MongoDB_URL = "mongodb://mongoRootAdmin:mongoRootAdmin@atl-az-we-tis-dw-dev-shard-00-00.seiqd.mongodb.net:27017,atl-az-we-tis-dw-dev-shard-00-01.seiqd.mongodb.net:27017,atl-az-we-tis-dw-dev-shard-00-02.seiqd.mongodb.net:27017/?ssl=true&replicaSet=atlas-31rrlc-shard-0&authSource=admin&retryWrites=true&w=majority"
-MongoDB_URL = "mongodb://admin:Admin123@172.26.224.58:27017/"
+MongoDB_URL = "mongodb://admin:Admin123@172.31.235.192:27017/"
 storage_account_name = "sdidwcheckpointuat"
 container_name = "checkpoint-workbooks"
 AccountKey = "54X3EJGbzAt9r7Xp16SSViAlCBsNXXm2vgDOZ7Cg8DIiAjGwlXSDJvRY4o9Mr8Oeo52dGlx5Ewv9+AStD9ZcDA=="
@@ -15,7 +15,7 @@ dest_support = os.path.join(os.getcwd(), 'TESTING_support.xlsx')
 username = "SDI_checkpoint-uat-tester"
 password = "Yd33kP136oxp"
 # host = "emr.dev.splat.nttltd.global.ntt"
-host = "172.26.224.58"
+host = "172.31.235.192"
 virtual_host = "MSP"
 aas_exchange = "AAS"
 publish_queue_tester = "AAS.REQUEST.OUTBOUND.CHECKPOINT_LICENSE_DISCOVERY"
