@@ -110,7 +110,7 @@ def watch_RabbitMQ_tester_consume(id):
             host=host,
             virtual_host=virtual_host,
             # ssl_options=ssl_options,
-            port=5672,
+            port=15672,
             credentials=credentials,
         )
     )
