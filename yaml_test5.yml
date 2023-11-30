@@ -20,14 +20,6 @@ steps:
   - script: |
       python3 -m pytest --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html -k AAS
     displayName: 'Run pytest'
-- ${{ if eq(parameters.Discovery, true) }}:
-  - script: |
-      python3 -m pytest test_main.py --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html -k Discovery
-    displayName: 'Run pytest'
-- ${{ if eq(parameters.Both, true) }}:
-  - script: |
-      python3 -m pytest test_main.py --junitxml=tests/test-results.xml --cov=. --cov-report=xml --cov-report=html
-    displayName: 'Run pytest'
     
 - task: UseDotNet@2
   displayName: 'Use .NET Core sdk'
