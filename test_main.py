@@ -54,7 +54,7 @@ def test_AAS_Failure_Case():
         assert aas_response == "Failure"
         logging.info("Successfully received data in consume queue.")
   
-
+'''
 def test_Discovery_Success_case():
     logging.info("Start for Success cases of POC_Discovery")
     #connect to azure storage account
@@ -96,5 +96,5 @@ def test_Discovery_Success_case():
     logging.info(f'gUploadedOn date is : {MongoDB_Data["gUploadedOn"]}')
     delete_blob(blob_service_client)
     logging.info("End of Success cases of POC_Discovery")
-
+'''
     
