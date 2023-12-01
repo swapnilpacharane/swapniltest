@@ -83,11 +83,14 @@ def watch_RabbitMQ_tester_publish(message_body):
             credentials=credentials,
         )
     )
-    channel = connection.channel(queue=consume_queue_tester)
+    channel = connection.channel()
+    channel.queue_declare(queue=consume_queue_tester)
     logging.info(f"Connection to RabbitMQ Success")
 
     # data to be publish
     message = message_body
+
+    print("message---------------------",message)
 
     # Publish the data into " task_queue"
     channel.basic_publish(
