@@ -99,8 +99,9 @@ def watch_RabbitMQ_tester_publish(message_body):
         properties=pika.BasicProperties(delivery_mode=2),
     )
     connection.close()
+    logging.info(f"message- {message}")
     logging.info(f"Successfully published the message, Closing the connection.")
-
+ 
 def watch_RabbitMQ_tester_consume(id):
     logging.info(f"Inside watch_RabbitMQ_tester_consume")
     credentials = pika.PlainCredentials(username, password)
@@ -130,6 +131,7 @@ def watch_RabbitMQ_tester_consume(id):
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     channel.basic_qos(prefetch_count=1)
+    logging.info(f"start consuming")
     channel.basic_consume(queue=consume_queue_tester, on_message_callback=callback)
 
     # listen to the queue
