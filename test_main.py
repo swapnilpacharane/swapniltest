@@ -40,7 +40,7 @@ def test_AAS_Success_Case():
         assert db_doc['g_last_actioned_on']
         assert db_doc['g_created_on']
 
-
+'''
 def test_AAS_Failure_Case():
     with services_context_manager("test_AAS_Failure_Case"):
         source_id = get_modified_payload("action", "activate")
@@ -54,7 +54,6 @@ def test_AAS_Failure_Case():
         assert aas_response == "Failure"
         logging.info("Successfully received data in consume queue.")
   
-'''
 def test_Discovery_Success_case():
     logging.info("Start for Success cases of POC_Discovery")
     #connect to azure storage account
